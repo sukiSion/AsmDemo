@@ -1,0 +1,55 @@
+plugins {
+    id 'java-library'
+    id 'groovy'
+    id 'maven-publish'
+    id 'java-gradle-plugin'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'com.android.tools.build:gradle:7.4.0'
+    implementation 'commons-io:commons-io:2.13.0'
+    implementation 'commons-codec:commons-codec:1.16.0'
+    implementation 'org.ow2.asm:asm:9.5'
+    implementation 'org.ow2.asm:asm-util:9.5'
+    implementation 'org.ow2.asm:asm-commons:9.5'
+}
+
+group 'minori.eden.sion.asmlib'
+version '1.0.0'
+
+publishing {
+    publications {
+        maven(MavenPublication){
+            groupId = group
+            artifactId = 'dependencies'
+            version = version
+
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url layout.buildDirectory.dir("maven-repo")
+        }
+    }
+}
+
+gradlePlugin {
+    plugins {
+        DependenciesPlugin{
+            // id：apply时引用的plugin id；
+            id = 'minori.eden.sion.asmlib.dependencies'
+            // implementationClass：Plugin路径；
+            implementationClass = 'minori.eden.sion.asmlib.LifecyclePlugin'
+        }
+    }
+}
+
